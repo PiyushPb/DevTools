@@ -1,0 +1,22 @@
+{
+  "name": "devtools",
+  "version": "1.0.0",
+  "description": "An open-source desktop application designed to enhance the workflow of web developers. It provides powerful tools for testing, debugging, and optimizing websites and web apps, focusing on responsive design and development efficiency.",
+  "main": "./src/app/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [
+    "Opensource",
+    "DevTools"
+  ],
+  "author": "piyushPb",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^33.2.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
