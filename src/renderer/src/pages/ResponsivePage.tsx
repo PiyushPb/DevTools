@@ -14,6 +14,7 @@ function ResponsivePage() {
   const [isConsoleVisible, setConsoleVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [resizePercentage, setResizePercentage] = useState(100);
 
   return (
     <main
@@ -26,9 +27,11 @@ function ResponsivePage() {
           setUrl={setUrl}
           url={url}
           setConsoleVisible={setConsoleVisible}
+          resizePercentage={resizePercentage}
+          setResizePercentage={setResizePercentage}
         />
         <section className="w-full h-full flex flex-row mt-3">
-          <Body url={url} theme={theme} />
+          <Body url={url} theme={theme} resizePercentage={resizePercentage} />
           <DevConsole theme={theme} isVisible={isConsoleVisible} />
         </section>
       </section>

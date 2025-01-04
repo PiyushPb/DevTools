@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CiMobile3 } from "react-icons/ci";
 import { GrPersonalComputer } from "react-icons/gr";
 import { MdTabletMac } from "react-icons/md";
@@ -16,16 +16,19 @@ interface DeviceRendererProps {
   device: Device;
   theme: any; // Replace `any` with proper theme type if needed
   url: string | null; // website URL
-  baseUrl: string; // base URL for resolving relative URLs
+  scale: number;
+  onResize: (width: number, height: number) => void; // Pass a function to notify parent of resize
 }
 
 const DeviceRenderer: React.FC<DeviceRendererProps> = ({
   device,
   theme,
   url,
+  scale,
+  onResize,
 }) => {
   const [iframeSrc, setIframeSrc] = useState<string>("");
-  const [dynamicScale, setDynamicScale] = useState<number>(device.scale);
+  const containerRef = useRef<HTMLDivElement | null>(null); // Ref to capture the device container dimensions
 
   useEffect(() => {
     if (url) {
@@ -35,36 +38,28 @@ const DeviceRenderer: React.FC<DeviceRendererProps> = ({
     }
   }, [url]);
 
+  // Notify the parent container when the component has been resized
   useEffect(() => {
-    const updateScale = () => {
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
+    if (containerRef.current) {
+      const width = containerRef.current.offsetWidth;
+      const height = containerRef.current.offsetHeight;
+      onResize(width, height); // Pass the size back to the parent container
+    }
+  }, [scale]); // Recalculate when scale changes
 
-      const scaleX = viewportWidth / device.width;
-      const scaleY = viewportHeight / device.height;
-
-      // Pick the smaller scale factor to fit within the viewport
-      const scale = Math.min(scaleX, scaleY, device.scale); // Do not exceed the default scale
-      setDynamicScale(scale);
-    };
-
-    // Update scale on load and resize
-    updateScale();
-    window.addEventListener("resize", updateScale);
-
-    return () => {
-      window.removeEventListener("resize", updateScale);
-    };
-  }, [device]);
+  const dynamicScale = scale;
 
   return (
-    <>
-      <div
-        style={{
-          width: `${device.width * dynamicScale}px`,
-        }}
-        className="mb-2 flex justify-between items-center"
-      >
+    <div
+      ref={containerRef}
+      style={{
+        width: `${device.width}px`,
+        height: `${device.height}px`,
+        transform: `scale(${dynamicScale})`,
+        transformOrigin: "top left",
+      }}
+    >
+      <div className="mb-2 flex justify-between items-center">
         <h3 className={`${theme.textPrimary} text-[12px]`}>{device.name}</h3>
         <div className="flex items-center gap-1">
           <span className={`${theme.textSecondary} text-[12px]`}>
@@ -87,12 +82,13 @@ const DeviceRenderer: React.FC<DeviceRendererProps> = ({
       {/* Device Frame */}
       <div
         style={{
-          width: `${device.width * dynamicScale}px`,
-          height: `${device.height * dynamicScale}px`,
+          width: `${device.width}px`,
+          height: `${device.height}px`,
           border: "1px solid #ccc",
           borderRadius: "5px",
           position: "relative",
           overflow: "hidden",
+          transformOrigin: "top left",
         }}
       >
         {iframeSrc && (
@@ -107,13 +103,12 @@ const DeviceRenderer: React.FC<DeviceRendererProps> = ({
               width: `${device.width}px`,
               height: `${device.height}px`,
               border: "none",
-              transform: `scale(${dynamicScale})`,
               transformOrigin: "top left",
             }}
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

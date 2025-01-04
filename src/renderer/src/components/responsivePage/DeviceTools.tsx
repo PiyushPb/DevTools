@@ -3,9 +3,11 @@ import { IoSettingsOutline, IoCameraOutline } from "react-icons/io5";
 import { PiDevices } from "react-icons/pi";
 import { HiOutlineCodeBracket } from "react-icons/hi2";
 
-function DeviceTools({ theme }) {
+function DeviceTools({ theme, scale }) {
   return (
-    <div className="flex justify-end items-center mb-2 gap-2">
+    <div
+      className="flex justify-end items-center mb-2 gap-2 w-full"
+    >
       <IoSettingsOutline className={`${theme.textPrimary}`} />
       <IoCameraOutline className={`${theme.textPrimary}`} />
       <div className="relative">

@@ -5,7 +5,13 @@ import { MdOutlineRefresh } from "react-icons/md";
 import themes from "../../constants/theme";
 import HeaderExtensions from "./HeaderExtensions";
 
-function Header({ setUrl, url, setConsoleVisible }) {
+function Header({
+  setUrl,
+  url,
+  setConsoleVisible,
+  resizePercentage,
+  setResizePercentage,
+}) {
   const { currentTheme } = useTheme();
   const theme = themes[currentTheme] || themes.light;
 
@@ -36,7 +42,11 @@ function Header({ setUrl, url, setConsoleVisible }) {
           value={url}
         />
       </div>
-      <HeaderExtensions setConsoleVisible={setConsoleVisible} />
+      <HeaderExtensions
+        setConsoleVisible={setConsoleVisible}
+        resizePercentage={resizePercentage}
+        setResizePercentage={setResizePercentage}
+      />
     </div>
   );
 }
